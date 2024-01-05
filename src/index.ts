@@ -5,6 +5,12 @@ const app = express()
 const port = process.env.PORT || 3000
 const prisma = new PrismaClient()
 
+const userrouter = express.Router()
+userrouter.get('/', (req, res) => {
+    res.send('Hello World!')
+})
+
+app.use("/user", userrouter)
 
 app.get("/:email", async (req, res) => {
     const email = req.params.email;
