@@ -15,7 +15,7 @@ app.get("/:email", async (req, res) => {
         })
         res.send(JSON.stringify(user, null, 4))
     } catch (ex) {
-        res.send("The userrrrr already exists")
+        res.send("The user already exists")
     }
 })
 
