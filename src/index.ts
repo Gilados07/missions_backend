@@ -19,9 +19,10 @@ app.get("/:email", async (req, res) => {
     }
 })
 
-app.get('/users', (req, res) => {
+app.get('/users', async (req, res) => {
     try {
-        const allUser = prisma.user.findMany();
+        const allUser = await prisma.user.findMany();
+        res.send(JSON.stringify(allUser, null, 4))
     }
     catch (ex) {
         res.send("Error getting the result's")
