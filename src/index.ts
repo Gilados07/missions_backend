@@ -19,9 +19,22 @@ app.get("/:email", async (req, res) => {
     }
 })
 
+app.get('/users', (req, res) => {
+    try {
+        const allUser = prisma.user.findMany();
+    }
+    catch (ex) {
+        res.send("Error getting the result's")
+
+    }
+})
+
+
 app.get('/', (req, res) => {
     res.send('Hello World!')
 })
+
+
 
 app.listen(+port, "0.0.0.0", () => {
     console.log(`Example app listening on port ${port}`)
