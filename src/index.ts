@@ -6,7 +6,7 @@ const port = process.env.PORT || 3000
 const prisma = new PrismaClient()
 
 
-app.get("/:email", async (req, res) => {
+/*app.get("/:email", async (req, res) => {
     const email = req.params.email;
 
     try {
@@ -17,7 +17,7 @@ app.get("/:email", async (req, res) => {
     } catch (ex) {
         res.send("The user already exists")
     }
-})
+})*/
 
 app.get('/users', async (req, res) => {
     try {
