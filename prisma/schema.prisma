@@ -14,6 +14,7 @@ model Organization {
   id    Int     @id @default(autoincrement())
   name  String
   users User[]
+  industry String
 }
 
 model User {
