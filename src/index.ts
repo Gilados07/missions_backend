@@ -18,7 +18,6 @@ app.get('/users', async (req, res) => {
 })
 
 
-
 app.get("/:email", async (req, res) => {
     const email = req.params.email;
 
