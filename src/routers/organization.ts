@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { error } from "console";
 import express from "express";
 
 const prisma = new PrismaClient();
@@ -14,25 +15,39 @@ organizationRouter.get("/", async (_req, res) => {
   }
 });
 
-organizationRouter.post("/", async (req, res) => {
+organizationRouter.post("/sendinvitelink", async (req, res) => {
   try {
-    const organizationName = req.body.organizationName;
-    const userName = req.body.userName;
-    const industry = req.body.industry;
-    const email = req.body.email;
-
-    const organization = await prisma.organization.create({
-      data: { industry, name: organizationName },
-    });
-    const user = await prisma.user.create({
-      data: { email, name: userName, organizationId: organization.id },
-    });
-    res.send({
-      organization,
-      user,
-    });
+    const orgid = req.body.orgid;
+    const link = orgid + "/";
+    return link;
   } catch {
-    res.status(400);
-    res.send("Error, invalid data");
+    res.send("The link is unvalid");
+  }
+});
+organizationRouter.post("/", async (req, res) => {
+  let transaction;
+  try {
+    transaction = await prisma.$transaction(async (prisma) => {
+      const organizationName = req.body.organizationName;
+      const userName = req.body.userName;
+      const industry = req.body.industry;
+      const email = req.body.email;
+
+      const organization = await prisma.organization.create({
+        data: { industry, name: organizationName },
+      });
+      if (organization) {
+        const user = await prisma.user.create({
+          data: { email, name: userName, organizationId: organization.id },
+        });
+        res.send({
+          organization,
+          user,
+        });
+      }
+    });
+  } catch (err) {
+    console.error("Transaction Error:", err);
+    res.send("Error");
   }
 });
