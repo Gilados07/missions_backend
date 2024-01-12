@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import { organizationRouter } from "./routers/organization";
 import { userRouter } from "./routers/user";
 import { missionRouter } from "./routers/mission";
@@ -6,6 +7,7 @@ import { missionRouter } from "./routers/mission";
 const app = express();
 const port = process.env.PORT || 3000;
 
+app.use(cors());
 app.use(express.json());
 app.use("/organization", organizationRouter);
 app.use("/user", userRouter);
