@@ -6,12 +6,22 @@ export const userRouter = express.Router();
 
 userRouter.get("/", async (_req, res) => {
   try {
-    const user = await prisma.user.findMany();
+    const users = await prisma.user.findMany();
+    res.send(users);
+  } catch {
+    res.send("DB Error");
+  }
+});
+
+userRouter.get("/:id", async (req, res) => {
+  try {
+    const user = await prisma.user.findFirst({ where: { id: +req.params.id } });
     res.send(user);
   } catch {
     res.send("DB Error");
   }
 });
+
 userRouter.post("/", async (req, res) => {
   try {
     const email = req.body.email;
