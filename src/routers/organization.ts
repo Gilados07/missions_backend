@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { error } from "console";
-import express from "express";
+import express, { text } from "express";
+import { sendEmail } from "../utils/emailClient";
 
 const prisma = new PrismaClient();
 
@@ -15,11 +15,40 @@ organizationRouter.get("/", async (_req, res) => {
   }
 });
 
+const generateEmailContent = (
+  userName: string,
+  organizationName: string,
+  inviteLink: string
+) => {
+  const subject = `${userName} has invited you to join missions`;
+  const text = `Hello!
+
+I hope this message finds you well. ${userName} from the ${organizationName} team has sent you an invite link.
+Click here to join ${inviteLink}
+
+Best regards,
+Gilad Bresinski,
+Intern
+`;
+  return {
+    subject,
+    text,
+  };
+};
+
 organizationRouter.post("/sendinvitelink", async (req, res) => {
   try {
     const orgid = req.body.orgid;
-    const link = orgid + "/";
-    return link;
+    const inviteeEmail = req.body.inviteeEmail;
+    const inviteLink = `${req.url}/register/${orgid}`;
+
+    const { subject, text } = generateEmailContent(
+      "Omer",
+      "GiladComapny",
+      inviteLink
+    );
+
+    sendEmail(inviteeEmail, subject, text);
   } catch {
     res.send("The link is unvalid");
   }
