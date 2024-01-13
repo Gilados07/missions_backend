@@ -25,8 +25,8 @@ userRouter.post("/", async (req, res) => {
     res.send({
       user,
     });
-  } catch {
+  } catch (err) {
     res.status(400);
-    res.send("Error, invalid data");
+    res.send((err as Error).message);
   }
 });
