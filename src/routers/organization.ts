@@ -8,7 +8,19 @@ export const organizationRouter = express.Router();
 
 organizationRouter.get("/", async (_req, res) => {
   try {
-    const organization = await prisma.organization.findMany();
+    const organizations = await prisma.organization.findMany();
+    res.send(organizations);
+  } catch {
+    res.send("DB Error");
+  }
+});
+
+organizationRouter.get("/:organizationId", async (req, res) => {
+  try {
+    const organization = await prisma.organization.findFirst({
+      where: { id: +req.params.organizationId },
+    });
+
     res.send(organization);
   } catch {
     res.send("DB Error");
@@ -21,15 +33,15 @@ const generateEmailContent = (
   inviteLink: string
 ) => {
   const subject = `${userName} has invited you to join missions`;
-  const text = `Hello!
+  const text = `
+  Hello!
 
-I hope this message finds you well. ${userName} from the ${organizationName} team has sent you an invite link.
-Click here to join ${inviteLink}
+  I hope this message finds you well. ${userName} from the ${organizationName} team has sent you an invite link.
+  Click here to join ${inviteLink}
 
-Best regards,
-Gilad Bresinski,
-Intern
-`;
+  Best regards,
+  Gilad Bresinski,
+  Intern`;
   return {
     subject,
     text,
@@ -53,6 +65,7 @@ organizationRouter.post("/sendinvitelink", async (req, res) => {
     res.send("The link is unvalid");
   }
 });
+
 organizationRouter.post("/", async (req, res) => {
   let transaction;
   try {
@@ -61,13 +74,19 @@ organizationRouter.post("/", async (req, res) => {
       const userName = req.body.userName;
       const industry = req.body.industry;
       const email = req.body.email;
+      const password = req.body.password;
 
       const organization = await prisma.organization.create({
         data: { industry, name: organizationName },
       });
       if (organization) {
         const user = await prisma.user.create({
-          data: { email, name: userName, organizationId: organization.id },
+          data: {
+            email,
+            name: userName,
+            organizationId: organization.id,
+            password,
+          },
         });
         res.send({
           organization,

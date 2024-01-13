@@ -11,25 +11,26 @@ datasource db {
 }
 
 model Organization {
-  id    Int     @id @default(autoincrement())
-  name  String
-  users User[]
+  id       Int    @id @default(autoincrement())
+  name     String
+  users    User[]
   industry String
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  missions Mission[]
-  organizationId Int 
-  organization  Organization @relation(fields: [organizationId], references: [id])
+  id             Int          @id @default(autoincrement())
+  email          String       @unique
+  name           String?
+  password       String
+  missions       Mission[]
+  organizationId Int
+  organization   Organization @relation(fields: [organizationId], references: [id])
 }
 
 model Mission {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  createdBy    User    @relation(fields: [createdById], references: [id])
-  createdById  Int
+  id          Int     @id @default(autoincrement())
+  title       String
+  content     String?
+  createdBy   User    @relation(fields: [createdById], references: [id])
+  createdById Int
 }
