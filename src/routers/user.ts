@@ -17,10 +17,10 @@ userRouter.post("/", async (req, res) => {
     const email = req.body.email;
     const userName = req.body.userName;
     const password = req.body.password;
-    const orgId = req.body.orgId; //צריך לקבל את זה מהיוזר מראש
+    const organizationId = req.body.organizationId; //צריך לקבל את זה מהיוזר מראש
 
     const user = await prisma.user.create({
-      data: { email, name: userName, organizationId: orgId, password },
+      data: { email, name: userName, organizationId, password },
     });
     res.send({
       user,
